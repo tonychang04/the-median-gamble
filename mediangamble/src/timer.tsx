@@ -21,26 +21,18 @@ const Timer: Devvit.CustomPostComponent = ({redis, postId }) => {
 
   const timer = useInterval(async () => {
     if (seconds > 0) {
-      setSeconds(prev => prev - 1);
-      await redis.set(key(postId), String(Date.now() + seconds * 1000));
+      const newSeconds = seconds - 1;
+      setSeconds(newSeconds);
+      await redis.set(key(postId), String(Date.now() + newSeconds * 1000));
     }
   }, 1000);
 
+  // Start the timer immediately when component mounts
+  timer.start();
+
   return (
     <vstack gap="medium" alignment="center middle">
-      <text size="xxlarge" weight="bold">{formatTime(seconds)}</text>
-      
-      <hstack gap="medium">
-        <button
-          onPress={async () => {
-            timer.stop();
-            setSeconds(24 * 3600);
-            await redis.del(key(postId));
-          }}
-        >
-          Reset
-        </button>
-      </hstack>
+      <text size="xxlarge" weight="bold">Time Left: {formatTime(seconds)}</text>
     </vstack>
   );
 };
