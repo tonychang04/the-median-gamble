@@ -25,7 +25,7 @@ Devvit.addMenuItem({
         </vstack>
       ),
     });
-    ui.showToast({ text: 'Created post!' });
+    ui.showToast({ text: 'New game created!' });
   },
 });
 

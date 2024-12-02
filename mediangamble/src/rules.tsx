@@ -19,7 +19,7 @@ export const Rules = ({ onBack }: { onBack: () => void }): JSX.Element => {
         <hstack gap="none">
           <text>💡 The </text>
           <spacer />
-          <text weight="bold">median </text>
+          <text weight="bold">median</text>
           <spacer />
           <text>is the middle number of all guesses</text>
         </hstack>
