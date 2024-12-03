@@ -1,6 +1,6 @@
-import { Devvit, useInterval, useState } from '@devvit/public-api';
+import { Devvit, useInterval, useState, RedisClient } from '@devvit/public-api';
 
-const Timer: Devvit.CustomPostComponent<{ redis: Devvit.RedisClient; postId: string }> = ({ redis, postId }) => {
+const Timer = ({ redis, postId }: { redis: RedisClient; postId: string }) => {
   const key = (postId: string | undefined): string => {
     return `timer_state:${postId}`;
   };
@@ -31,7 +31,7 @@ const Timer: Devvit.CustomPostComponent<{ redis: Devvit.RedisClient; postId: str
 
   return (
     <vstack gap="medium" alignment="center middle">
-      <text size="xxlarge" weight="bold">Time Left: {formatTime(seconds)}</text>
+      <text size="xxlarge" weight="bold" color="white">Time Left: {formatTime(seconds)}</text>
     </vstack>
   );
 };

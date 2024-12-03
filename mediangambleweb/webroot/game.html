@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta charset="UTF-8" />
+    <title>Median Game</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="game-container">
+      <h1>Make Your Guess!</h1>
+      <div class="selected-number">Selected number: <span id="number-display">-</span></div>
+      <div class="input-container">
+        <input 
+          type="number" 
+          id="guess-input" 
+          min="1" 
+          max="100" 
+          placeholder="Enter number (1-100)"
+        >
+        <button class="submit-guess-button" id="submit-guess">Submit Guess</button>
+      </div>
+      <div id="message-output"></div>
+    </div>
+    <script type="application/javascript" src="script.js"></script>
+  </body>
+</html>
