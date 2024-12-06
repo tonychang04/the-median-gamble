@@ -1,16 +1,62 @@
-import { Devvit, useInterval, useState, RedisClient } from '@devvit/public-api';
+import { Devvit, useInterval, useState, RedisClient, Context } from '@devvit/public-api';
 
-const Timer = ({ redis, postId }: { redis: RedisClient; postId: string }) => {
+const Timer = ({ redis, postId, context, setWebviewVisible }: { 
+  redis: RedisClient; 
+  postId: string; 
+  context: Context;
+  setWebviewVisible: (page: string) => void; 
+}) => {
   const key = (postId: string | undefined): string => {
     return `timer_state:${postId}`;
   };
 
-  const [seconds, setSeconds] = useState(async () => {
-    const endTime = await redis.get(key(postId));
-    if (!endTime) return 24 * 3600;
-    const remaining = Math.max(0, Math.floor((Number(endTime) - Date.now()) / 1000));
-    return remaining;
-  });
+  const [endTime, setEndTime] = useState<number | null>(null);
+  const [seconds, setSeconds] = useState<number>(300);
+
+  // Debug function to force timer end
+  const forceEndTimer = async () => {
+    const currentTime = Date.now();
+    await redis.set(key(postId), String(currentTime)); // Set endTime to current time
+    setEndTime(currentTime);
+    setSeconds(0);
+  };
+
+  // Sync with Redis occasionally (for global state)
+  const syncTimer = useInterval(async () => {
+    try {
+      let storedEndTime = await redis.get(key(postId));
+      
+      if (!storedEndTime) {
+        const newEndTime = Date.now() + (5 * 60 * 1000);
+        await redis.set(key(postId), String(newEndTime));
+        storedEndTime = String(newEndTime);
+      }
+
+      const parsedEndTime = Number(storedEndTime);
+      setEndTime(parsedEndTime);
+    } catch (error) {
+      console.error('Error syncing with Redis:', error);
+    }
+  }, 5000);
+
+  // Smooth local countdown (for display)
+  const localTimer = useInterval(() => {
+    if (!endTime) return;
+    
+    const now = Date.now();
+    const remaining = Math.max(0, Math.floor((endTime - now) / 1000));
+    setSeconds(remaining);
+
+    if (remaining <= 0) {
+      localTimer.stop();
+      syncTimer.stop();
+      setWebviewVisible('conclusion');
+      return;
+    }
+  }, 100);
+
+  syncTimer.start();
+  localTimer.start();
 
   const formatTime = (totalSeconds: number) => {
     const hours = Math.floor(totalSeconds / 3600);
@@ -19,19 +65,18 @@ const Timer = ({ redis, postId }: { redis: RedisClient; postId: string }) => {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const timer = useInterval(async () => {
-    if (seconds > 0) {
-      const newSeconds = seconds - 1;
-      setSeconds(newSeconds);
-      await redis.set(key(postId), String(Date.now() + newSeconds * 1000));
-    }
-  }, 1000);
-
-  timer.start();
-
   return (
     <vstack gap="medium" alignment="center middle">
-      <text size="xxlarge" weight="bold" color="white">Time Left: {formatTime(seconds)}</text>
+      <text size="xxlarge" weight="bold" color="white">
+        {endTime === null ? "Calculating Time Left..." : `Time Left: ${formatTime(seconds)}`}
+      </text>
+      <button 
+        onPress={forceEndTimer}
+        appearance="secondary"
+        textColor="white"
+      >
+        End Timer Now (Debug)
+      </button>
     </vstack>
   );
 };
