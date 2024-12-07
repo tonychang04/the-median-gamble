@@ -1,11 +1,16 @@
 import './createPost.js';
-import { Devvit, useState, Context } from '@devvit/public-api';
+import { Devvit, useState} from '@devvit/public-api';
 import { Timer } from './Timer.js';
 
 Devvit.configure({
   redditAPI: true,
   redis: true,
 });
+
+type WebViewMessage = {
+  type: 'closeWebview' | 'submitGuess' | 'endGame' | 'initialGuess';
+  data?: any;
+};
 
 Devvit.addCustomPostType({
   name: 'Median Gamble',
@@ -16,46 +21,33 @@ Devvit.addCustomPostType({
       return currUser?.username ?? 'anon';
     });
 
+    // game, rules, conclusion
     const [webviewVisible, setWebviewVisible] = useState('');
 
-    const handleMessage = async (message: any) => {
+    const handleMessage = async (message: WebViewMessage) => {
       if (message.type === 'closeWebview') {
         setWebviewVisible('');
       }
       if (message.type === 'submitGuess') {
         try {
           const guessValue = message.data.guess;
+          console.log(username, guessValue);
+          console.log(`guess:${context.postId}`);
           await context.redis.hSet(
-            `guess:${context.postId}:${username}`,
-            guessValue
+            `guess:${context.postId}`,
+            { [username] : guessValue }
           );
-          context.ui.webView.postMessage('medianGame', {
-            type: 'devvit-message',
-            message: 'Guess saved successfully'
-          });
         } catch (error) {
           // Handle error if guess submission fails
         }
       }
-      if (message.type === 'requestInitialGuess') {
-        try {
-          const savedGuess = await context.redis.get(`guess:${context.postId}:${username}`);
-          if (savedGuess) {
-            context.ui.webView.postMessage('medianGame', {
-              type: 'initialGuess',
-              data: { guess: savedGuess }
-            });
-          }
-        } catch (error) {
-          console.error('Error fetching initial guess:', error);
-        }
-      }
-      if (message.type === 'gameEnded' || webviewVisible === 'conclusion') {
+  
+      if (message.type === 'endGame') {
         try {
           // Get all guesses from Redis hash
-          const allGuesses = await context.redis.hGetAll(`guess:${context.postId}:*`);
+          const allGuesses = await context.redis.hGetAll(`guess:${context.postId}`);
           console.log('Found keys:', allGuesses);
-
+          
           const guesses = Object.values(allGuesses).map((value) => Number(value));
 
           // Filter out null values and calculate median
@@ -68,7 +60,7 @@ Devvit.addCustomPostType({
             : sortedGuesses[mid];
 
           // Get user's guess
-          const userGuess = await context.redis.get(`guess:${context.postId}:${username}`);
+          const userGuess = await context.redis.hGet(`guess:${context.postId}`, username);
           
           console.log(median, userGuess, validGuesses.length);  
           // Send results to webview
@@ -83,6 +75,21 @@ Devvit.addCustomPostType({
         } catch (error) {
           console.error('Error calculating results:', error);
         }
+      }
+    };
+
+    const handlePlayGame = async () => {
+      setWebviewVisible('games');
+      console.log('Getting current guess');
+      const savedGuess = await context.redis.hGet(`guess:${context.postId}`, username);
+      console.log(savedGuess);
+      if (savedGuess) {
+        console.log('Sending initial guess');
+        context.ui.webView.postMessage('medianGame', {
+          type: 'initialGuess',
+          data: { guess: savedGuess }
+        });
+        console.log('Initial guess sent');
       }
     };
 
@@ -108,7 +115,7 @@ Devvit.addCustomPostType({
           <spacer size="medium" />
           <hstack gap="medium">
             <button 
-              onPress={() => setWebviewVisible('games')}
+              onPress={() => handlePlayGame()}
               appearance="secondary"
               textColor="white"
             >
@@ -141,7 +148,7 @@ Devvit.addCustomPostType({
               }
               grow
               height={webviewVisible ? '100%' : '0%'}
-              onMessage={handleMessage}
+              onMessage={(message) => handleMessage(message as WebViewMessage)}
             />
           </vstack>
         </vstack>

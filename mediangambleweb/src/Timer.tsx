@@ -27,7 +27,7 @@ const Timer = ({ redis, postId, context, setWebviewVisible }: {
       let storedEndTime = await redis.get(key(postId));
       
       if (!storedEndTime) {
-        const newEndTime = Date.now() + (5 * 60 * 1000);
+        const newEndTime = Date.now() + (24 * 60 * 60 * 1000);
         await redis.set(key(postId), String(newEndTime));
         storedEndTime = String(newEndTime);
       }
@@ -51,6 +51,9 @@ const Timer = ({ redis, postId, context, setWebviewVisible }: {
       localTimer.stop();
       syncTimer.stop();
       setWebviewVisible('conclusion');
+      context.ui.webView.postMessage('medianGame', {
+        type: 'endGame'
+      });
       return;
     }
   }, 100);
