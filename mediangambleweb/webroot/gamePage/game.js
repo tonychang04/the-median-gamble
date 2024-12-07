@@ -1,15 +1,14 @@
 class App {
   constructor() {
-    console.log("App initialized");
+    console.log("Game initialized");
     
-    //const guessInput = document.querySelector('#guess-input');
-    //const submitButton = document.querySelector('#submit-guess');
-    //const lastGuessDisplay = document.querySelector('#last-guess');
-    //const messageOutput = document.querySelector('#message-output');
+    const guessInput = document.querySelector('#guess-input');
+    const submitButton = document.querySelector('#submit-guess');
+    const lastGuessDisplay = document.querySelector('#last-guess');
+    const messageOutput = document.querySelector('#message-output');
     const backButton = document.querySelector('#back-button');
 
-
-    // Add message listener for game results
+    // Message listener
     window.addEventListener('message', (event) => {
       const { type, data } = event.data;
       
@@ -31,21 +30,13 @@ class App {
           const { guess } = message.data;
           if (guess) lastGuessDisplay.textContent = `Your last guess: ${guess}`;
         }
-          
-        if (message.type === 'endGame') {
-          window.parent.postMessage({
-            type: 'endGame'
-          }, '*');
-        }
       }
     });
 
-    /*  submitButton.addEventListener('click', () => {
+    submitButton.addEventListener('click', () => {
       const guessValue = guessInput.value;
       const guess = parseInt(guessValue);
       if (guess >= 1 && guess <= 100) {
-        
-        // Send to parent (Devvit)
         window.parent.postMessage({
           type: 'submitGuess',
           data: { guess: guessValue }
@@ -57,8 +48,7 @@ class App {
       } else {
         messageOutput.textContent = 'Please enter a number between 1 and 100';
       }
-    }); */
-    
+    });
     
     backButton.addEventListener('click', () => {
       console.log("Back button clicked");
@@ -66,8 +56,7 @@ class App {
         type: 'closeWebview'
       }, '*');
     });
-
   }
 }
 
-new App();
+new App(); 

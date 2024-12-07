@@ -31,8 +31,6 @@ Devvit.addCustomPostType({
       if (message.type === 'submitGuess') {
         try {
           const guessValue = message.data.guess;
-          console.log(username, guessValue);
-          console.log(`guess:${context.postId}`);
           await context.redis.hSet(
             `guess:${context.postId}`,
             { [username] : guessValue }
@@ -80,9 +78,7 @@ Devvit.addCustomPostType({
 
     const handlePlayGame = async () => {
       setWebviewVisible('games');
-      console.log('Getting current guess');
       const savedGuess = await context.redis.hGet(`guess:${context.postId}`, username);
-      console.log(savedGuess);
       if (savedGuess) {
         console.log('Sending initial guess');
         context.ui.webView.postMessage('medianGame', {
@@ -141,10 +137,10 @@ Devvit.addCustomPostType({
               id="medianGame"
               url={
                 webviewVisible === 'rules' 
-                  ? 'rules.html' 
+                  ? 'rulesPage/rules.html' 
                   : webviewVisible === 'conclusion'
                     ? 'conclusion.html'
-                    : 'game.html'
+                    : 'gamePage/game.html'
               }
               grow
               height={webviewVisible ? '100%' : '0%'}
