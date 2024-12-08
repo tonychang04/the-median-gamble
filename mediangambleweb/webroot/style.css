@@ -126,13 +126,13 @@ button:hover {
 
 .tab-container {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 0;
 }
 
 .tab-buttons {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .tab-button {
@@ -178,10 +178,16 @@ button:hover {
   align-items: center;
 }
 
+#histogram-tab h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
 #histogram {
   width: 100%;
   max-width: 400px;
   height: 250px;
+  margin-top: 0;
 }
 
 /* Style the leaderboard scrolling */

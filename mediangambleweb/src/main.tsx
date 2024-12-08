@@ -61,6 +61,7 @@ Devvit.addCustomPostType({
           postId={context.postId ?? ''} 
           context={context}
           setWebviewVisible={setWebviewVisible}
+          webviewVisible={webviewVisible}
         />
         <spacer size="medium" />
         <vstack

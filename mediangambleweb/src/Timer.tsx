@@ -1,11 +1,12 @@
 import { Devvit, useInterval, useState, RedisClient, Context } from '@devvit/public-api';
 import { calculateGameResults } from './calculateGame.js';
 
-const Timer = ({ redis, postId, context, setWebviewVisible }: { 
+const Timer = ({ redis, postId, context, setWebviewVisible, webviewVisible }: { 
   redis: RedisClient; 
   postId: string; 
   context: Context;
-  setWebviewVisible: (page: string) => void; 
+  setWebviewVisible: (page: string) => void;
+  webviewVisible: string;
 }) => {
   const key = (postId: string | undefined): string => {
     return `timer_state:${postId}`;
@@ -47,9 +48,6 @@ const Timer = ({ redis, postId, context, setWebviewVisible }: {
     }
   }, 10000);
 
-  // Add state to track if conclusion was shown
-  const [conclusionShown, setConclusionShown] = useState(false);
-
   // Local display update
   const localTimer = useInterval(async () => {
     if (!endTime) return;
@@ -62,17 +60,15 @@ const Timer = ({ redis, postId, context, setWebviewVisible }: {
       syncTimer.stop();
       
       try {
-        if (!conclusionShown) {  // Only show conclusion once
-          const username = (await context.reddit.getCurrentUser())?.username ?? 'anon';
-          const results = await calculateGameResults(redis, postId, username);
-          setWebviewVisible('conclusion');
-          setConclusionShown(true);
-          
-          context.ui.webView.postMessage('medianGame', {
-            type: 'gameResults',
-            data: results
-          });
-        }
+          if (webviewVisible !== 'conclusion') {
+              const username = (await context.reddit.getCurrentUser())?.username ?? 'anon';
+              const results = await calculateGameResults(redis, postId, username);
+              setWebviewVisible('conclusion');          
+              context.ui.webView.postMessage('medianGame', {
+                type: 'gameResults',
+                data: results
+              });
+          }
       } catch (error) {
         console.error('Error calculating end game results:', error);
       }
