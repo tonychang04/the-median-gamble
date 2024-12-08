@@ -1,4 +1,5 @@
 import { Devvit, useInterval, useState, RedisClient, Context } from '@devvit/public-api';
+import { calculateGameResults } from './calculateGame.js';
 
 const Timer = ({ redis, postId, context, setWebviewVisible }: { 
   redis: RedisClient; 
@@ -42,12 +43,15 @@ const Timer = ({ redis, postId, context, setWebviewVisible }: {
         setEndTime(Number(storedEndTime));
       }
     } catch (error) {
-      console.error('Error syncing with Redis:', error);
+     // console.error('Error syncing with Redis:', error);
     }
-  }, 5000);
+  }, 10000);
+
+  // Add state to track if conclusion was shown
+  const [conclusionShown, setConclusionShown] = useState(false);
 
   // Local display update
-  const localTimer = useInterval(() => {
+  const localTimer = useInterval(async () => {
     if (!endTime) return;
     
     const now = Date.now();
@@ -56,10 +60,22 @@ const Timer = ({ redis, postId, context, setWebviewVisible }: {
     if (remaining <= 0) {
       localTimer.stop();
       syncTimer.stop();
-      setWebviewVisible('conclusion');
-      context.ui.webView.postMessage('medianGame', {
-        type: 'endGame'
-      });
+      
+      try {
+        if (!conclusionShown) {  // Only show conclusion once
+          const username = (await context.reddit.getCurrentUser())?.username ?? 'anon';
+          const results = await calculateGameResults(redis, postId, username);
+          setWebviewVisible('conclusion');
+          setConclusionShown(true);
+          
+          context.ui.webView.postMessage('medianGame', {
+            type: 'gameResults',
+            data: results
+          });
+        }
+      } catch (error) {
+        console.error('Error calculating end game results:', error);
+      }
     }
   }, 100);
 
@@ -78,8 +94,11 @@ const Timer = ({ redis, postId, context, setWebviewVisible }: {
   return (
     <vstack gap="medium" alignment="center middle">
       <text size="xxlarge" weight="bold" color="white">
-        {endTime === null ? "Calculating Time Left..." : `Time Left: ${formatTime(endTime)}`}
+        {endTime === null ? "Calculating Time Left..." : 
+         (endTime - Date.now() <= 0) ? "Game Ended! 🏆 Results below!" : 
+         `Time Left: ${formatTime(endTime)}`}
       </text>
+      {/* Debug button commented out
       <button 
         onPress={forceEndTimer}
         appearance="secondary"
@@ -87,6 +106,7 @@ const Timer = ({ redis, postId, context, setWebviewVisible }: {
       >
         End Timer Now (Debug)
       </button>
+      */}
     </vstack>
   );
 };

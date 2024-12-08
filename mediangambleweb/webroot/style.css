@@ -31,15 +31,10 @@ body {
   width: 100%;
 }
 
-.game-container, .rules-container {
-  background: var(--card-bg);
-  backdrop-filter: blur(10px);
-  border-radius: var(--border-radius);
+.game-container, .rules-container, .conclusion-container {
   padding: 1rem;
-  width: 85%;
+  width: 100%;
   max-width: 440px;
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow);
   overflow: hidden;
 }
 
@@ -105,26 +100,127 @@ button:hover {
   font-weight: 600;
 }
 
-.close-rules-button {
-  width: 100%;
-  margin-top: 1rem;
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: auto;
+  margin: 0;
+  padding: 0.5rem;
+  background: none;
+  box-shadow: none;
+  color: var(--text-color);
+  opacity: 0.7;
 }
 
-@media (max-width: 640px) {
-  .game-container, .rules-container {
-    width: 85%;
-    padding: 1rem;
-    max-height: 85vh;
-  }
+.back-button:hover {
+  opacity: 1;
+  transform: none;
+}
 
-  h1 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-  }
+.back-button::before {
+  content: "\2039"; 
+  margin-right: 0.25rem;
+  font-size: 1.2rem;
+}
 
-  .rules-container li {
-    margin: 0.25rem 0;
-    padding: 0.375rem;
-  }
+.tab-container {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ffffff40;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.tab-button.active {
+  background: #ffffff20;
+  border-color: white;
+}
+
+.tab-panel {
+  display: none;
+  height: 100%;
+  padding: 0 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+
+.tab-panel.active {
+  display: block;
+  opacity: 1;
+}
+
+#results-container {
+  margin-bottom: 20px;
+}
+
+/* Ensure the histogram fits properly */
+#histogram-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#histogram {
+  width: 100%;
+  max-width: 400px;
+  height: 250px;
+}
+
+/* Style the leaderboard scrolling */
+#leaderboard-tab {
+  padding-bottom: 20px;
+}
+
+.conclusion-container {
+  padding: 1rem;
+  width: 100%;
+  max-width: 440px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.tab-content {
+  flex: 1;
+  position: relative;
+  min-height: 300px;
+}
+
+.tab-panel {
+  position: relative;
+  overflow-y: auto;
+}
+
+#results-container {
+  margin-bottom: 20px;
+}
+
+/* Ensure the histogram fits within the panel */
+#histogram-tab canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Style the leaderboard scrolling */
+#leaderboard-tab {
+  padding-bottom: 20px;
 }
 

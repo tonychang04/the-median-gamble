@@ -1,0 +1,44 @@
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      />
+      <meta charset="UTF-8" />
+      <title>Game Results</title>
+      <link rel="stylesheet" href="../style.css" />
+    </head>
+    <body>
+      <div class="conclusion-container">
+        <div id="results-container">
+          <div id="median-value" class="result-item"></div>
+          <div id="your-guess" class="result-item"></div>
+          <div id="result-message" class="result-item"></div>
+          <div id="winner-message" class="result-item"></div>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="tab-container">
+          <div class="tab-buttons">
+            <button class="tab-button active" data-tab="histogram">Distribution</button>
+            <button class="tab-button" data-tab="leaderboard">Leaderboard</button>
+          </div>
+          
+          <!-- Tab Content -->
+          <div class="tab-content">
+            <div id="histogram-tab" class="tab-panel active">
+              <h3>Distribution of Guesses</h3>
+              <canvas id="histogram" width="300" height="200"></canvas>
+            </div>
+            
+            <div id="leaderboard-tab" class="tab-panel">
+              <h3>Leaderboard</h3>
+              <div id="player-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script type="application/javascript" src="conclusion.js"></script>
+    </body>
+  </html> 

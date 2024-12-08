@@ -39,41 +39,6 @@ Devvit.addCustomPostType({
           // Handle error if guess submission fails
         }
       }
-  
-      if (message.type === 'endGame') {
-        try {
-          // Get all guesses from Redis hash
-          const allGuesses = await context.redis.hGetAll(`guess:${context.postId}`);
-          console.log('Found keys:', allGuesses);
-          
-          const guesses = Object.values(allGuesses).map((value) => Number(value));
-
-          // Filter out null values and calculate median
-          const validGuesses = guesses.filter((g): g is number => g !== null);
-          console.log('Valid guesses:', validGuesses);
-          const sortedGuesses = [...validGuesses].sort((a, b) => a - b);
-          const mid = Math.floor(sortedGuesses.length / 2);
-          const median = sortedGuesses.length % 2 === 0
-            ? (sortedGuesses[mid - 1] + sortedGuesses[mid]) / 2
-            : sortedGuesses[mid];
-
-          // Get user's guess
-          const userGuess = await context.redis.hGet(`guess:${context.postId}`, username);
-          
-          console.log(median, userGuess, validGuesses.length);  
-          // Send results to webview
-          context.ui.webView.postMessage('medianGame', {
-            type: 'gameResults',
-            data: {
-              median: median,
-              userGuess: userGuess ?? 'No guess submitted',
-              totalPlayers: validGuesses.length
-            }
-          });
-        } catch (error) {
-          console.error('Error calculating results:', error);
-        }
-      }
     };
 
     const handlePlayGame = async () => {
@@ -139,7 +104,7 @@ Devvit.addCustomPostType({
                 webviewVisible === 'rules' 
                   ? 'rulesPage/rules.html' 
                   : webviewVisible === 'conclusion'
-                    ? 'conclusion.html'
+                    ? 'conclusionPage/conclusion.html'
                     : 'gamePage/game.html'
               }
               grow
