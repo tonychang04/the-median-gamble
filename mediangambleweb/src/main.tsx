@@ -64,34 +64,39 @@ Devvit.addCustomPostType({
           webviewVisible={webviewVisible}
         />
         <spacer size="medium" />
-        <vstack
-          grow={webviewVisible.length !== 0}
-          height={webviewVisible.length !== 0 ? '0%' : '100%'}
-          alignment="middle center"
-        >
-          <text size="xlarge" weight="bold" color="white">
-            The Median Gamble
-          </text>
-          <spacer size="large" />
-          <text size="medium" color="white">Welcome, {username}!</text>
-          <spacer size="medium" />
-          <hstack gap="medium">
-            <button 
-              onPress={() => handlePlayGame()}
-              appearance="secondary"
-              textColor="white"
-            >
-              Play Game
-            </button>
-            <button 
-              onPress={() => setWebviewVisible('rules')}
-              appearance="secondary"
-              textColor="white"
-            >
-              Rules
-            </button>
-          </hstack>
-        </vstack>
+     
+          <vstack grow={webviewVisible.length !== 0}  alignment="middle center" height={webviewVisible.length !== 0 ? '0%' : '100%'} >
+          <text size="xxlarge" weight="bold" color="white">
+              The Median Gamble
+            </text>
+            <vstack padding="large">
+              <text 
+                size="large" 
+                color="white" 
+                alignment="center"
+                wrap={true}
+              >
+                Welcome, {username}! To the world of guess, and strategy—think you can outsmart fellow peers and the Reddit community? Choose your guess wisely.
+              </text>
+            </vstack>
+            <spacer size="medium" />
+            <hstack gap="medium">
+              <button 
+                onPress={() => handlePlayGame()}
+                appearance="secondary"
+                textColor="white"
+              >
+                Play Game
+              </button>
+              <button 
+                onPress={() => setWebviewVisible('rules')}
+                appearance="secondary"
+                textColor="white"
+              >
+                Rules
+              </button>
+            </hstack>
+          </vstack>
         <vstack grow={webviewVisible !== ''} height={webviewVisible ? '100%' : '0%'}>
           <vstack 
             border="thick" 
