@@ -16,17 +16,17 @@ class App {
         if (message.type === 'gameResults') {
           const { median, userGuess, totalPlayers, allGuesses } = message.data;
 
+          /*
           // populates lots of test data for testing
           const testGuesses = Array(50).fill().map((_, index) => ({
             username: `Player${index}`,
             guess: Math.floor(Math.min(Math.random() * 100 + 10),99)
           }));
-         
+          */
           
-          this.median = median;
           this.updateResults(median, userGuess, totalPlayers);
-          this.drawHistogram(testGuesses,32);
-          this.updatePlayerList(testGuesses, 32);
+          this.drawHistogram(testGuesses, median);
+          this.updatePlayerList(testGuesses, median);
         }
       }
     });
