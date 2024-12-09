@@ -76,7 +76,7 @@ Devvit.addCustomPostType({
                 alignment="center"
                 wrap={true}
               >
-                Welcome, {username}! To the world of guess, and strategy—think you can outsmart fellow peers and the Reddit community? Choose your guess wisely.
+                Welcome, {username}! To the world of guess, lies, and strategy—think you can outsmart fellow peers and the Reddit community? Choose your guess wisely.
               </text>
             </vstack>
             <spacer size="medium" />

@@ -153,18 +153,19 @@ button:hover {
 .tab-panel {
   display: none;
   height: 100%;
-  padding: 0 10px;
   opacity: 0;
   transition: opacity 0.2s ease;
   position: absolute;
   width: 100%;
   left: 0;
   top: 0;
+  z-index: 1;
 }
 
 .tab-panel.active {
   display: block;
   opacity: 1;
+  z-index: 2;
 }
 
 #results-container {
@@ -176,18 +177,13 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-#histogram-tab h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
+  margin-top: -20px;
 }
 
 #histogram {
   width: 100%;
-  max-width: 400px;
+  max-width: 700px;
   height: 250px;
-  margin-top: 0;
 }
 
 /* Style the leaderboard scrolling */
@@ -198,8 +194,8 @@ button:hover {
 .conclusion-container {
   padding: 1rem;
   width: 100%;
-  max-width: 440px;
-  height: 100vh;
+  max-width: 480px;
+  height: 92vh;
   display: flex;
   flex-direction: column;
 }
@@ -211,8 +207,21 @@ button:hover {
 }
 
 .tab-panel {
-  position: relative;
-  overflow-y: auto;
+  display: none;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.tab-panel.active {
+  display: block;
+  opacity: 1;
+  z-index: 2;
 }
 
 #results-container {
@@ -228,5 +237,49 @@ button:hover {
 /* Style the leaderboard scrolling */
 #leaderboard-tab {
   padding-bottom: 20px;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 0.5rem;
+    color: white;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 8px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    line-height: 1.2;
+}
+
+.leaderboard-table th {
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Column-specific styling */
+.leaderboard-table th:first-child,
+.leaderboard-table td:first-child {
+    width: 15%;
+    text-align: center;
+}
+
+.leaderboard-table th:nth-child(2),
+.leaderboard-table td:nth-child(2) {
+    width: 55%;
+    text-align: left;
+}
+
+.leaderboard-table th:last-child,
+.leaderboard-table td:last-child {
+    width: 30%;
+    text-align: center;
+}
+
+.leaderboard-table tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
