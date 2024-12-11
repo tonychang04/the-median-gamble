@@ -88,7 +88,7 @@ Devvit.addMenuItem({
       console.error('Error creating manual median gamble:', error);
       context.ui.showToast({ 
         text: 'Failed to create new game', 
-        appearance: 'error' 
+        appearance: 'neutral'
       });
     }
   },

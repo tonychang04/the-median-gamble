@@ -54,6 +54,41 @@ Devvit.addCustomPostType({
       }
     };
 
+    const isMobile = (context.dimensions?.width ?? 800) < 600;
+
+    if (isMobile) {
+      return (
+        <vstack 
+          grow 
+          padding="large" 
+          backgroundColor="#1a1a1a" 
+          alignment="middle center"
+        >
+          <text 
+            size="xlarge" 
+            weight="bold" 
+            color="white" 
+            alignment="center"
+          >
+            Mobile/App Not Supported
+          </text>
+          <spacer size="medium" />
+          <text 
+            color="white" 
+            alignment="center"
+          >
+            Please visit this game on desktop/web
+          </text>
+          <text 
+            color="white" 
+            alignment="center"
+          >
+            for the best experience.
+          </text>
+        </vstack>
+      );
+    }
+
     return (
       <vstack grow padding="small" backgroundColor="#1a1a1a">
         <Timer 
