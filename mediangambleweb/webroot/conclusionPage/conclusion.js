@@ -25,8 +25,8 @@ class App {
           */
           
           this.updateResults(median, userGuess, totalPlayers);
-          this.drawHistogram(testGuesses, median);
-          this.updatePlayerList(testGuesses, median);
+          this.drawHistogram(allGuesses, median);
+          this.updatePlayerList(allGuesses, median);
         }
       }
     });
