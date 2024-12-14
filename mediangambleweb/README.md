@@ -1,7 +1,8 @@
 # The Median Gamble
 
 A strategic number-guessing game where players compete to get closest to the median - with a twist!
-
+![gameResults](https://github.com/user-attachments/assets/957ff1c8-272b-46f0-8f57-a6df4ca0bd2e)
+![Uploading Screenshot 2024-12-08 at 20.03.37.png…]()
 ## How to Play
 
 1. Each day at midnight PST, a new game begins
