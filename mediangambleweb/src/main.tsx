@@ -21,8 +21,12 @@ Devvit.addCustomPostType({
       return currUser?.username ?? 'anon';
     });
 
-    // game, rules, conclusion
     const [webviewVisible, setWebviewVisible] = useState('');
+
+    const [guessCount, setGuessCount] = useState(async () => {
+      const guesses = await context.redis.hKeys(`guess:${context.postId}`);
+      return guesses.length;
+    });
 
     const handleMessage = async (message: WebViewMessage) => {
       if (message.type === 'closeWebview') {
@@ -98,9 +102,17 @@ Devvit.addCustomPostType({
           setWebviewVisible={setWebviewVisible}
           webviewVisible={webviewVisible}
         />
-        <spacer size="medium" />
-     
-          <vstack grow={webviewVisible.length !== 0}  alignment="middle center" height={webviewVisible.length !== 0 ? '0%' : '100%'} >
+        {webviewVisible !== 'conclusion' && (
+          <hstack alignment="middle center">
+            <text color="white" size="large">
+              Player Guesses: 
+            </text>
+            <text color="white" size="large" weight="bold">
+              {guessCount}
+            </text>
+          </hstack>
+        )}
+        <vstack grow={webviewVisible.length !== 0}  alignment="middle center" height={webviewVisible.length !== 0 ? '0%' : '100%'} >
           <text size="xxlarge" weight="bold" color="white">
               The Median Gamble
             </text>
@@ -131,7 +143,7 @@ Devvit.addCustomPostType({
                 Rules
               </button>
             </hstack>
-          </vstack>
+        </vstack>
         <vstack grow={webviewVisible !== ''} height={webviewVisible ? '100%' : '0%'}>
           <vstack 
             border="thick" 

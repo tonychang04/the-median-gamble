@@ -4,7 +4,7 @@ type PlayerGuess = {
 };
 
 type GameResults = {
-  median: number;
+  median: number | string;
   userGuess: string | number;
   totalPlayers: number;
   allGuesses: PlayerGuess[];
@@ -38,7 +38,7 @@ export async function calculateGameResults(
   const userGuess = await redis.hGet(`guess:${postId}`, username);
   
   return {
-    median,
+    median: validGuesses.length === 0 ? 'No players submitted guess' : median,
     userGuess: userGuess ?? 'No guess submitted',
     totalPlayers: validGuesses.length,
     allGuesses: playerGuesses
