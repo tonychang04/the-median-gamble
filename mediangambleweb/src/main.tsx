@@ -58,7 +58,7 @@ Devvit.addCustomPostType({
       }
     };
 
-    const isMobile = (context.dimensions?.width ?? 800) < 600;
+    const isMobile = (context.dimensions?.width ?? 800) < 400;
 
     if (isMobile) {
       return (

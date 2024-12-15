@@ -16,15 +16,20 @@ class App {
         if (message.type === 'gameResults') {
           const { median, userGuess, totalPlayers, allGuesses } = message.data;
 
-          /*
+          
+          /* populates lots of test data for testing
           const testGuesses = Array(50).fill().map((_, index) => ({
             username: `Player${index}`,
             guess: Math.floor(Math.min(Math.random() * 100 + 10),99)
           }));
+          
+          const testMedian = testGuesses
+          .map(g => g.guess)
+          .sort((a, b) => a - b)[Math.floor(testGuesses.length / 2)];
           */
-        
+          
           this.updateResults(median, userGuess, totalPlayers);
-          this.drawHistogram(allGuesses, median);
+          this.drawHistogram(allGuesses, median, userGuess);
           this.updatePlayerList(allGuesses, median);
         }
       }
@@ -59,7 +64,7 @@ class App {
     if (messageElement) messageElement.textContent = `Total Players: ${totalPlayers}`;
   }
 
-  drawHistogram(allGuesses, median) {
+  drawHistogram(allGuesses, median, userGuess) {
     const canvas = document.getElementById('histogram');
     if (!canvas) return;
     
@@ -159,6 +164,26 @@ class App {
         
         // Reset fill style
         ctx.fillStyle = 'white';
+    }
+    
+    // Draw user guess line if it exists and is a number
+    if (userGuess && !isNaN(userGuess)) {
+        const userX = padding + ((userGuess / 10) * barWidth);
+        
+        // Draw vertical user guess line
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(0, 255, 0, 0.8)';  // Green color
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 3]);
+        ctx.moveTo(userX, height - padding);
+        ctx.lineTo(userX, padding);
+        ctx.stroke();
+        
+        // Add "Your Guess" label
+        ctx.fillStyle = 'rgba(0, 255, 0, 0.8)';
+        ctx.textAlign = 'center';
+        ctx.fillText('Your Guess', userX, padding - 35);
+        ctx.fillText(userGuess, userX, padding - 20);
     }
     
     // Draw x-axis interval labels (0, 10, 20, etc)
