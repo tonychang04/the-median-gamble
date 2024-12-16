@@ -1,5 +1,5 @@
 import './createPost.js';
-import { Devvit, useState, Scheduler} from '@devvit/public-api';
+import { Devvit, useState, useInterval} from '@devvit/public-api';
 import { Timer } from './Timer.js';
 
 Devvit.configure({
